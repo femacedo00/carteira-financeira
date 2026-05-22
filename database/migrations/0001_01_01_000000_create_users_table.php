@@ -14,9 +14,13 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
-            $table->string('cpf_cnpj', 14)->unique(); // Considerando apenas os números
+
+            // Replaces the default email column as the primary authentication key. Stored as digits only.
+            $table->string('cpf_cnpj', 14)->unique();
+
             $table->string('password', 255);
-            $table->decimal('balance', 15, 2)->default(0); // Saldo bancário com limite de R$: 9.999.999.999.999,99
+            $table->decimal('balance', 15, 2)->default(0);
+
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
