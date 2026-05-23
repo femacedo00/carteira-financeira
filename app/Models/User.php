@@ -13,8 +13,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'cpf_cnpj', 'password', 'balance'])]
-#[Hidden(['id', 'password', 'remember_token'])]
+#[Fillable(['name', 'cpf_cnpj', 'password', 'financial_password', 'balance'])]
+#[Hidden(['id', 'password', 'financial_password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -29,6 +29,7 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'financial_password' => 'hashed',
             'balance' => 'decimal:2',
         ];
     }

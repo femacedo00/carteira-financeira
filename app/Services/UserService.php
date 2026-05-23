@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\DB;
 
 class UserService
@@ -27,5 +28,19 @@ class UserService
 
             return $user;
         });
+    }
+
+    /**
+     * Update financial Passowrd
+     */
+    public function updateFinancialPassword(User $user, string $financial_password): void
+    {
+        $updated = $user->update([
+            'financial_password' => $financial_password,
+        ]);
+
+        if (! $updated) {
+            throw new Exception('Somenthing went wrong. Try Again');
+        }
     }
 }

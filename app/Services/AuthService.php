@@ -16,7 +16,7 @@ class AuthService
     {
         $user = User::where('cpf_cnpj', $credentials['cpf_cnpj'])->first();
 
-        // Try logging with the credentials
+        // Try logging with credentials
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
             // If the attempt failed, something is wrong with the credentials
             throw ValidationException::withMessages([
