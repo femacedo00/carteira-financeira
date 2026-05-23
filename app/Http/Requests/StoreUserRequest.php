@@ -12,7 +12,7 @@ class StoreUserRequest extends FormRequest
     use SanitizesDocument;
 
     /**
-     * Determine if the user is authorized to make this request.
+     * Determine if user is authorized to make this request.
      */
     public function authorize(): bool
     {

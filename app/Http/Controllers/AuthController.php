@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AuthRequest;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Nette\Schema\ValidationException;
 
 class AuthController extends Controller
@@ -32,5 +33,18 @@ class AuthController extends Controller
                 'message' => $e->getMessage(),
             ], 401);
         }
+    }
+
+    /**
+     * Removes the current session
+     */
+    public function logout(Request $request): JsonResponse
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        return response()->json(
+            [],
+            204
+        );
     }
 }
