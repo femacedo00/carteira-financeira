@@ -31,7 +31,7 @@ class WalletSetting extends Model
     }
 
     /**
-     * Get the use that owns the wallet setting
+     * Get the user that owns the wallet setting
      */
     public function user(): BelongsTo
     {
