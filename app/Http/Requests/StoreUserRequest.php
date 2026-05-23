@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests;
 
+use App\Traits\SanitizesDocument;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Override;
 
 class StoreUserRequest extends FormRequest
 {
+    use SanitizesDocument;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -21,8 +24,7 @@ class StoreUserRequest extends FormRequest
     {
         if ($this->has('cpf_cnpj')) {
             $this->merge([
-                // removing everything except numbers
-                'cpf_cnpj' => preg_replace('/[^0-9]/', '', $this->cpf_cnpj),
+                'cpf_cnpj' => $this->sanitizeCpfCnpj($this->cpf_cnpj),
             ]);
         }
     }
