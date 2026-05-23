@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthRequest;
+use App\Http\Resources\UserResource;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -33,6 +34,14 @@ class AuthController extends Controller
                 'message' => $e->getMessage(),
             ], 401);
         }
+    }
+
+    public function me(Request $request): JsonResponse
+    {
+        return response()->json(
+            new UserResource($request->user()),
+            200
+        );
     }
 
     /**

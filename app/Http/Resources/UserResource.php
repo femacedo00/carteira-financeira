@@ -17,6 +17,7 @@ class UserResource extends JsonResource
         return [
             'name' => $this->name,
             'document' => $this->cpf_cnpj,
+            'balance' => $this->balance,
         ];
     }
 }
