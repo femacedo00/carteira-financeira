@@ -40,4 +40,15 @@ class StoreUserRequest extends FormRequest
             'password' => 'required|string|min:8',
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     */
+    public function messages(): array
+    {
+        return [
+            'cpf_cnpj.cpf_cnpj' => 'Invalid CPF or CNPJ format.',
+            'unique' => 'This document is already registered.',
+        ];
+    }
 }
