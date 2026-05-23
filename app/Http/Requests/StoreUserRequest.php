@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Override;
 
 class StoreUserRequest extends FormRequest
 {
@@ -15,6 +16,17 @@ class StoreUserRequest extends FormRequest
         return true;
     }
 
+    #[Override]
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('cpf_cnpj')) {
+            $this->merge([
+                // removing everything except numbers
+                'cpf_cnpj' => preg_replace('/[^0-9]/', '', $this->cpf_cnpj),
+            ]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,7 +36,7 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'cpf_cnpj' => 'required|string|max:14|unique:users',
+            'cpf_cnpj' => 'required|string|cpf_cnpj|max:14|unique:users,cpf_cnpj',
             'password' => 'required|string|min:8',
         ];
     }
