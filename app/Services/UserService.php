@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,7 @@ class UserService
                 'night_deposit_limit' => config('wallet.limits.night_deposit', 1000.00),
             ]);
 
-            return $user;
+            return new UserResource($user);
         });
     }
 
