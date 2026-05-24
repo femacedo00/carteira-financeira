@@ -18,4 +18,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('deposit-refund', [TransactionController::class, 'depositRefund']);
 
     Route::post('transfer', [TransactionController::class, 'transfer']);
+    Route::post('transfer-refund', [TransactionController::class, 'transferRefund']);
 });

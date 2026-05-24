@@ -45,7 +45,7 @@ class DepositService extends TransactionService
     }
 
     /**
-     * method to refund a deposit in the DataBase
+     * Method to refund a deposit in the DataBase
      */
     public function executeRefundDeposit(User $user, array $refund): TransactionResource
     {
@@ -66,7 +66,7 @@ class DepositService extends TransactionService
         $amount = $originalDeposit->amount;
 
         // Checks if token belongs to a deposit
-        if ($originalDeposit->type !== TransactionType::DEPOSIT) {
+        if ($this->isSameType($originalDeposit->type, TransactionType::DEPOSIT)) {
             throw new Exception('This transaction is not a deposit');
         }
 

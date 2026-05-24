@@ -31,8 +31,11 @@ class TransactionService
     public function getTransaction(User $user, string $token): Transaction
     {
         // Gets the original transaction
-        return $user->transactions()
-            ->where('token', $token)
+        return Transaction::where('token', $token)
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhere('related_user_id', $user->id);
+            })
             ->firstOr(function () {
                 // If not found: error
                 throw new Exception('Original transaction not found or invalid token.');
@@ -71,6 +74,16 @@ class TransactionService
         $isEnough = $balance >= $amount ? true : false;
 
         return $isEnough;
+    }
+
+    /**
+     * Verify if both types is the same type.
+     */
+    public function isSameType(TransactionType $originType, TransactionType $currentType): bool
+    {
+        $isSame = $originType !== $currentType ? true : false;
+
+        return $isSame;
     }
 
     /**
