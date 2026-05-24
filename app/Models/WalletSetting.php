@@ -2,23 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[Fillable(['day_transfer_limit', 'night_transfer_limit', 'day_deposit_limit', 'night_deposit_limit'])]
 class WalletSetting extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = [
-        'day_transfer_limit',
-        'night_transfer_limit',
-        'day_deposit_limit',
-        'night_deposit_limit',
-    ];
-
     /**
-     * Ensure that values are returned as decimals rathar than string
+     * Ensure that values are returned as decimals rather than string
      */
     protected function casts(): array
     {
