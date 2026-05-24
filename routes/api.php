@@ -15,4 +15,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('financial-password', [UserController::class, 'updateFinancialPassoword']);
 
     Route::post('deposit', [TransactionController::class, 'deposit']);
+    Route::post('deposit-refund', [TransactionController::class, 'depositRefund']);
 });

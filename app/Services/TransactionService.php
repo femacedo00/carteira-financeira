@@ -3,10 +3,66 @@
 namespace App\Services;
 
 use App\Enums\TransactionType;
+use App\Models\Transaction;
 use App\Models\User;
+use Exception;
+use Illuminate\Support\Facades\Hash;
 
 class TransactionService
 {
+    /**
+     * Verify if it's within the permitted window for refund
+     */
+    public function isWithinRefundWindow(Transaction $transaction): bool
+    {
+        // Days allowed for refund
+        $allowedDays = config('wallet.limits.night_deposit', 7);
+
+        // Calcualtes the difference between the deposit date and the refund date
+        $daysPassed = $transaction->created_at->diffInDays(now());
+
+        // If allowed: true
+        return $daysPassed <= $allowedDays;
+    }
+
+    /**
+     * Gets a user transaction by token
+     */
+    public function getTransaction(User $user, string $token): Transaction
+    {
+        // Gets the original transaction
+        return $user->transactions()
+            ->where('token', $token)
+            ->firstOr(function () {
+                // If not found: error
+                throw new Exception('Original transaction not found or invalid token.');
+            });
+    }
+
+    /**
+     * Verify if deposit has already been refunded.
+     */
+    public function isAlreadyRefunded(User $user, int $original_transaction_id): bool
+    {
+        return $user->transactions()
+            ->where('original_transaction_id', $original_transaction_id)
+            ->where('type', TransactionType::REFUND)
+            ->exists();
+    }
+
+    /**
+     * Verify if password is the same in the database.
+     */
+    public function isFinancialPasswordCorrect(User $user, string $financial_password): bool
+    {
+        if (! Hash::check($financial_password, $user->financial_password)) {
+            // If failed, password is not the same
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * Verify if is nightTime.
      */
@@ -33,12 +89,12 @@ class TransactionService
         if ($type == TransactionType::DEPOSIT) {
             return $this->isNightTime()
                 ? $user->walletSetting->night_deposit_limit
-                : $user->walletSetting->daily_deposit_limit;
+                : $user->walletSetting->day_deposit_limit;
         }
 
         return $this->isNightTime()
             ? $user->walletSetting->night_transfer_limit
-            : $user->walletSetting->daily_transfer_limit;
+            : $user->walletSetting->day_transfer_limit;
     }
 
     /**

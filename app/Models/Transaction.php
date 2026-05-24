@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['user_id', 'type', 'amount', 'original_transaction_token', 'token'])]
+#[Fillable(['user_id', 'type', 'amount', 'original_transaction_id', 'token'])]
 #[Hidden(['id', 'user_id', 'updated_at', 'created_at'])]
 class Transaction extends Model
 {
