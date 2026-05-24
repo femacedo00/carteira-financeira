@@ -4,10 +4,12 @@ namespace App\Models;
 
 use App\Enums\TransactionType;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['user_id', 'type', 'amount', 'original_transaction_token'])]
+#[Fillable(['user_id', 'type', 'amount', 'original_transaction_token', 'token'])]
+#[Hidden(['id', 'user_id', 'updated_at', 'created_at'])]
 class Transaction extends Model
 {
     protected function casts(): array
