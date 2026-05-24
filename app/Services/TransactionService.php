@@ -64,6 +64,16 @@ class TransactionService
     }
 
     /**
+     * Verify if user has enough balance.
+     */
+    public function isEnoughBalance(float $balance, float $amount): bool
+    {
+        $isEnough = $balance >= $amount ? true : false;
+
+        return $isEnough;
+    }
+
+    /**
      * Verify if is nightTime.
      */
     public function isNightTime(): bool

@@ -24,7 +24,7 @@ class DepositService extends TransactionService
         $remainingLimit = $this->remainingLimit($user, $depositType);
         if ($remainingLimit < $amount) {
             // If reached the limit of it, returns error
-            throw new Exception('The amount exceeds your daily deposit limit. Remaining limit for today: R$'.number_format($remainingLimit, 2, ',', '.'));
+            throw new Exception('The amount exceeds your deposit limit. Remaining limit for today: R$'.number_format($remainingLimit, 2, ',', '.'));
         }
 
         // If it passes validation, it executes the deposit transaction
