@@ -19,9 +19,9 @@ class TransferRequest extends FormRequest
     #[Override]
     protected function prepareForValidation(): void
     {
-        if ($this->has('cpf_cnpj')) {
+        if ($this->has('document')) {
             $this->merge([
-                'cpf_cnpj' => $this->sanitizeCpfCnpj($this->cpf_cnpj),
+                'document' => $this->sanitizeCpfCnpj($this->document),
             ]);
         }
     }
