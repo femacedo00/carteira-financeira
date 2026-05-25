@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests;
 
+use App\Traits\SanitizesDocument;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Override;
 
 class TransferRequest extends FormRequest
 {
+    use SanitizesDocument;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -19,9 +22,9 @@ class TransferRequest extends FormRequest
     #[Override]
     protected function prepareForValidation(): void
     {
-        if ($this->has('document')) {
+        if ($this->has('addressee_document')) {
             $this->merge([
-                'document' => $this->sanitizeCpfCnpj($this->document),
+                'addressee_document' => $this->sanitizeCpfCnpj($this->addressee_document),
             ]);
         }
     }
@@ -36,7 +39,7 @@ class TransferRequest extends FormRequest
         return [
             'amount' => 'required|numeric|gt:0|decimal:0,2',
             'addressee_document' => 'required|string|cpf_cnpj',
-            'financial_password' => 'required|string|numeric|digits:6',
+            'password' => 'required|string|numeric|digits:6',
         ];
     }
 

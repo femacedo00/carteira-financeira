@@ -37,7 +37,7 @@ class TransferService extends TransactionService
      */
     public function executeTransfer(User $user, array $transfer): TransactionResource
     {
-        $financial_password = $transfer['financial_password'];
+        $financial_password = $transfer['password'];
 
         // Checks if the financial password is correct
         if (! $this->isFinancialPasswordCorrect($user, $financial_password)) {
