@@ -38,10 +38,10 @@ class UserService
     /**
      * Update financial Passowrd
      */
-    public function updateFinancialPassword(User $user, string $financial_password): void
+    public function updateFinancialPassword(User $user, array $data): void
     {
         $updated = $user->update([
-            'financial_password' => $financial_password,
+            'financial_password' => $data['password'],
         ]);
 
         if (! $updated) {

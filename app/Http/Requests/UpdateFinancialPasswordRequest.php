@@ -23,7 +23,7 @@ class UpdateFinancialPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'financial_password' => 'required|string|numeric|digits:6',
+            'password' => 'required|string|numeric|digits:6',
         ];
     }
 }

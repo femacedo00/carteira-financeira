@@ -40,13 +40,13 @@ class UserController extends Controller
     {
         try {
             // Validates using the UpdateFinancialPasswordRequest class
-            $financial_password = $request->validated('financial_password');
+            $validated = $request->validated();
 
             // Get the user that request the update
             $user = $request->user();
 
             // Creates financial password using the UserService class
-            $this->userService->updateFinancialPassword($user, $financial_password);
+            $this->userService->updateFinancialPassword($user, $validated);
 
             // Returns a succssefull HTTP Response
             return response()->json([
