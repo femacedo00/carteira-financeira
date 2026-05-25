@@ -49,7 +49,7 @@ class DepositService extends TransactionService
      */
     public function executeRefundDeposit(User $user, array $refund): TransactionResource
     {
-        $financial_password = $refund['financial_password'];
+        $financial_password = $refund['password'];
 
         // Checks if the financial password is correct
         if (! $this->isFinancialPasswordCorrect($user, $financial_password)) {

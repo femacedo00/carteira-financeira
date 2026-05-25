@@ -24,7 +24,7 @@ class DepositRefundRequest extends FormRequest
     {
         return [
             'token' => 'required|string',
-            'financial_password' => 'required|string|numeric|digits:6',
+            'password' => 'required|string|numeric|digits:6',
         ];
     }
 }
