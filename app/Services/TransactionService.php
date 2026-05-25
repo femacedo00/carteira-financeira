@@ -47,8 +47,11 @@ class TransactionService
      */
     public function isAlreadyRefunded(User $user, int $original_transaction_id): bool
     {
-        return $user->transactions()
-            ->where('original_transaction_id', $original_transaction_id)
+        return Transaction::where('original_transaction_id', $original_transaction_id)
+            ->where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhere('related_user_id', $user->id);
+            })
             ->where('type', TransactionType::REFUND)
             ->exists();
     }
