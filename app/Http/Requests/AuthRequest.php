@@ -37,7 +37,7 @@ class AuthRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cpf_cnpj' => 'required|string|cpf_cnpj',
+            'document' => 'required|string|cpf_cnpj',
             'password' => 'required|string',
         ];
     }

@@ -14,7 +14,7 @@ class AuthService
      */
     public function authenticate(array $credentials): array
     {
-        $user = User::where('cpf_cnpj', $credentials['cpf_cnpj'])->first();
+        $user = User::where('cpf_cnpj', $credentials['document'])->first();
 
         // Try logging with credentials
         if (! $user || ! Hash::check($credentials['password'], $user->password)) {
