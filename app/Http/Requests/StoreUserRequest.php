@@ -37,8 +37,8 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'cpf_cnpj' => 'required|string|cpf_cnpj|max:14|unique:users,cpf_cnpj',
+            'username' => 'required|string|max:255',
+            'document' => 'required|string|cpf_cnpj|max:14|unique:users,cpf_cnpj',
             'password' => 'required|string|min:8',
         ];
     }
@@ -49,7 +49,7 @@ class StoreUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'cpf_cnpj.cpf_cnpj' => 'Invalid CPF or CNPJ format.',
+            'cpf_cnpj' => 'Invalid CPF or CNPJ format.',
             'unique' => 'This document is already registered.',
         ];
     }

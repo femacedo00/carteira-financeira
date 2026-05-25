@@ -12,12 +12,16 @@ class UserService
     /**
      * Creates a new user and their associated wallet settings.
      */
-    public function createUser(array $data): User
+    public function createUser(array $data): UserResource
     {
         // DB::transaction guarantees that either everything will be saved or nothin will be saved in the database
         return DB::transaction(function () use ($data) {
-            // Creating the User
-            $user = User::Create($data);
+            // Creating user
+            $user = User::Create([
+                'name' => $data['username'],
+                'cpf_cnpj' => $data['document'],
+                'password' => $data['password'],
+            ]);
 
             // Creating the wallet settings using config file
             $user->walletSetting()->create([
