@@ -1,4 +1,4 @@
-# API Carteira Financeira
+# 🇧🇷 API Carteira Financeira
 
 Sistema de carteira financeira desenvolvido em Laravel.
 
@@ -40,7 +40,7 @@ cp .env.example .env
 ```
 
 ### Suba os Contêineres (Docker)
-Com os pacotes instalados e o .env configurado, inicie o servidor, o banco de dados e os serviços auxiliares em segundo plano:
+Com os pacotes instalados e o ´.env´ configurado, inicie o servidor, o banco de dados e os serviços auxiliares em segundo plano:
 ```bash
 ./vendor/bin/sail up -d
 ```
@@ -62,6 +62,138 @@ alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
 ```
 
 A partir de agora, o seu fluxo de trabalho fica muito mais limpo.
+
+Exemplo:
+```bash
+sail artisan make:migration nome_da_tabela
+```
+
+## Endpoints da API
+
+### Rotas Públicas
+
+**Criar Conta (Cadastro)**
+`POST /api/user`
+* **Descrição:** Registra um novo usuário no sistema.
+* **Regras:** Exige um nome válido, documento único (CPF ou CNPJ) e uma senha com no mínimo 8 caracteres.
+* **Segurança:** As senhas são criptografadas utilizando **Argon2id** para elevar a segurança.
+* **Nota:** Embora não seja solicitada no momento do cadastro, será necessário criar posteriormente uma senha financeira (PIN) de 6 números para realizar qualquer movimentação bancária.
+
+**Login**
+`POST /api/login`
+* **Descrição:** Autentica o usuário para acessar as funcionalidades do sistema.
+* **Regras:** Necessita do CPF/CNPJ e da senha para efetuar a autenticação.
+* **Segurança:** A autenticação escolhida foi o **Laravel Sanctum** para garantir maior segurança, já que o token não pode ser descriptografado (nenhuma informação sensível está presente no token, apenas no banco de dados, onde é vinculado). O login destrói automaticamente qualquer sessão anterior.
+* **Tempo limite:** A sessão expira automaticamente após 10 minutos.
+
+---
+
+### Rotas Autenticadas
+*Requer o cabeçalho `Authorization: Bearer {token}`.*
+
+**Perfil do Usuário (Me)**
+`GET /api/me`
+* **Descrição:** Retorna os detalhes do usuário autenticado.
+* **Retorno:** Nome, documento (CPF/CNPJ) e o saldo atual da carteira.
+
+**Configurar/Atualizar Senha Financeira**
+`PATCH /api/financial-password`
+* **Descrição:** Cria ou atualiza a senha financeira de 6 números.
+* **Regras:** Essa senha é estritamente necessária para realizar transações.
+
+**Logout**
+`GET /api/logout`
+* **Descrição:** Desfaz a autenticação atual. Será necessário fazer o login novamente para acessar o sistema.
+
+#### Operações Financeiras
+
+**Depósito**
+`POST /api/deposit`
+* **Descrição:** Adiciona saldo à conta do usuário.
+* **Regras:** O sistema avalia e aplica automaticamente limites de depósito, variando de acordo com o dia e a noite.
+* **Retorno:** Retorna um `token` único da transação que será necessário caso o usuário queira realizar um reembolso dessa ação no futuro.
+
+**Reembolso de Depósito**
+`POST /api/deposit-refund`
+* **Descrição:** Estorna um depósito realizado anteriormente, deduzindo o valor do saldo.
+* **Regras:** Caso o usuário queira realizar o reembolso, é necessário informar o `token` gerado no momento do depósito e a senha financeira. Um depósito só pode ser reembolsado uma única vez.
+
+**Transferência (P2P)**
+`POST /api/transfer`
+* **Descrição:** Transfere fundos do usuário autenticado para outra conta.
+* **Regras:** O usuário pode transferir parte ou todo o seu saldo, mas nunca mais do que possui. A transação depende se o saldo desejado é menor ou igual ao limite de transferência que ele pode realizar naquele momento (dia/noite).
+
+**Reembolso de Transferência**
+`POST /api/transfer-refund`
+* **Descrição:** Estorna uma transferência, fazendo com que o dinheiro volte para o seu local de origem.
+* **Regras:** Tanto o usuário que enviou quanto quem recebeu o dinheiro podem pedir o estorno, mas a ação é restrita apenas a esses dois. Exige o `token` da transação original e a senha financeira. Assim como o depósito, o reembolso pode ser realizado apenas uma vez.
+
+# 🇺🇸 Financial Wallet API
+
+Financial wallet system developed in Laravel.
+
+## Prerequisites
+
+To run this project in an isolated environment, you don't need to install PHP or databases on your local machine. You will only need:
+
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) running.
+* **Windows Users:** It is strictly necessary to use **WSL2** (Ubuntu or another Linux distribution). Do not run the commands directly in PowerShell or CMD.
+* [Git](https://git-scm.com/) installed.
+
+### Clone the repository
+```bash
+git clone [https://github.com/femacedo00/carteira-financeira.git](https://github.com/femacedo00/carteira-financeira.git)
+cd carteira-financeira
+```
+
+Install dependencies
+
+Since the `vendor` folder (where the Sail executable is located) is ignored by Git, we need to download the Laravel packages.
+
+If you already have PHP and Composer installed on your machine (or in WSL), just run:
+```bash
+composer install
+```
+
+If you do not have PHP locally, use this temporary Docker container to download the packages:
+```bash
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php84-composer:latest \
+    composer install --ignore-platform-reqs
+```
+
+### Configure Environment Variables
+Create your local configuration file:
+```bash
+cp .env.example .env
+```
+
+### Start the Containers (Docker)
+With the packages installed and the .env configured, start the server, database, and auxiliary services in the background:
+```bash
+./vendor/bin/sail up -d
+```
+
+### Prepare the Application and Database
+Generate the Laravel cryptographic security key and build the database tables (ensure the containers from the previous step have fully started):
+
+```bash
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate:fresh
+```
+
+The application will be running perfectly and accessible at: http://localhost
+
+### Tip: Sail Shortcut
+So you don't have to type ./vendor/bin/sail before every Laravel command, configure this alias in your Linux/WSL terminal:
+```bash
+alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)'
+```
+
+From now on, your workflow gets much cleaner.
 
 Exemplo:
 ```bash
